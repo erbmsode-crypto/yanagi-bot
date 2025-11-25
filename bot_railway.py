@@ -230,8 +230,14 @@ class CareView(discord.ui.View):
 @bot.event
 async def on_ready():
     print("Bot logged in!")
-    bot.add_view(CareView())  # 永続ビュー登録
+
+    # 永続ビューを重複で追加しないようにする
+    if not hasattr(bot, "persistent_added"):
+        bot.add_view(CareView())
+        bot.persistent_added = True
+
     await bot.tree.sync()
+
 
 
 @bot.tree.command(name="carepanel", description="Show Yanagi care buttons")
@@ -242,3 +248,4 @@ async def carepanel(interaction: discord.Interaction):
 
 
 bot.run(TOKEN)
+
